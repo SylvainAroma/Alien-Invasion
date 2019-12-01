@@ -17,7 +17,8 @@ class AlienInvasion:
         pygame.init()
         self.settings = Settings()
 
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
+        self.screen = pygame.display.set_mode((self.settings.screen_width, 
+            self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
         #instance to store game statistics
         self.stats = GameStats(self)
@@ -63,6 +64,7 @@ class AlienInvasion:
         self.stats.reset_stats()
         self.sb.prep_score()
         self.sb.prep_level()
+        self.sb.prep_ships()
         self.stats.game_active = True
         self.settings.initialize_dynamic_settings()
 
@@ -109,7 +111,8 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         """Creat a bullet and add it to the bullet group"""
-        """if statement limits amount of bullets allowed to three based on bullet settings"""
+        """if statement limits amount of bullets allowed to three 
+        based on bullet settings"""
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
@@ -161,6 +164,7 @@ class AlienInvasion:
         if self.stats.ships_left > 0:
         #decrease one life
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
         #get rid of any remaining aliens and bullets
             self.aliens.empty()
             self.bullets.empty()
