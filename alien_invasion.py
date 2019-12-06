@@ -6,16 +6,20 @@ from game_stats import GameStats
 from button import Button
 from ship import Ship
 from bullet import Bullet
+from bullet import Special_Bullet
 from alien import Alien
 from scoreboard import Scoreboard
+
 
 class AlienInvasion:
     """Overall class to maanage game assets and behaviour"""
 
     def __init__(self):
         """initialize the game, and create game resourecs"""
+        self._music_()     
         pygame.init()
         self.settings = Settings()
+
 
         self.screen = pygame.display.set_mode((self.settings.screen_width, 
             self.settings.screen_height))
@@ -25,6 +29,7 @@ class AlienInvasion:
         self.sb = Scoreboard(self)
 
         self.bg_color = (self.settings.bg_color)
+
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -32,6 +37,7 @@ class AlienInvasion:
 
         #makes the play button
         self.play_button = Button(self, "Play")
+
 
     def run_game(self):
         """start main loop"""
@@ -42,9 +48,16 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+                self.sb.prep_ammo()
 
             self._update_screen()
  
+    def _music_(self):
+        pygame.mixer.init(22050, -16, 2, 512)
+        pygame.mixer.init()
+        pygame.mixer.music.load('track.ogg')
+        pygame.mixer.music.play()
+
     def _check_events(self):
         #Watch for keyboard and mouse events.
         for event in pygame.event.get():
@@ -62,6 +75,7 @@ class AlienInvasion:
         """general behavior for starting the game"""
         #reset the game statistics
         self.stats.reset_stats()
+        self.sb.prep_ammo()
         self.sb.prep_score()
         self.sb.prep_level()
         self.sb.prep_ships()
@@ -99,7 +113,9 @@ class AlienInvasion:
             elif event.key == pygame.K_SPACE:
                 self._fire_bullet()
             elif event.key == pygame.K_p and not self.stats.game_active:                
-                    self._start_game()
+                self._start_game()
+            elif event.key == pygame.K_s:
+                self._fire_special()
                 
 
     def _check_keyup_events(self, event):
@@ -116,6 +132,17 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            self.stats.ammo_count = len(self.bullets)
+
+    def _fire_special(self):
+        """Limited special bullet - ammo set at 2 per level"""
+        if self.settings.special_bullets_allowed > 0:
+            new_special = Special_Bullet(self)
+            self.bullets.add(new_special)
+            self.settings.special_bullets_allowed -= 1
+        else:
+            print("Out of Ammo!")
+
 
     def _update_bullets(self):
         self.bullets.update()
@@ -147,6 +174,8 @@ class AlienInvasion:
             #increase level
             self.stats.level += 1
             self.sb.prep_level()
+            #rests special bullet ammo
+            self.settings.special_bullets_allowed += 3
 
     def _update_aliens(self):
         """updates the position of all aliens in the fleet"""
@@ -225,7 +254,7 @@ class AlienInvasion:
 
     def _update_screen(self):
         #make the most recently draw screen visible
-            self.screen.fill(self.settings.bg_color)
+            self.screen.fill(self.settings.bg_color)        
             self.ship.blitme()
             for bullet in self.bullets.sprites():
                 bullet.draw_bullet()

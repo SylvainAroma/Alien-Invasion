@@ -22,6 +22,7 @@ class Scoreboard:
         self.prep_high_score()
         self.prep_level()
         self.prep_ships()
+        self.prep_ammo()
 
 
     def prep_score(self):
@@ -70,6 +71,7 @@ class Scoreboard:
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.screen.blit(self.normal_ammo_image, self.normal_ammo_rect)
         self.ships.draw(self.screen)
 
     def prep_ships(self):
@@ -80,3 +82,13 @@ class Scoreboard:
             ship.rect.x = 10 + ship_number * ship.rect.width
             ship.rect.y = 10
             self.ships.add(ship)
+
+    def prep_ammo(self):
+        #renders normal ammo count
+        normal_ammo_str = "Ammo" " " + str(self.stats.ammo_count)
+
+        self.normal_ammo_image = self.font.render(normal_ammo_str, True, 
+            self.text_color, self.settings.bg_color)
+
+        self.normal_ammo_rect = self.normal_ammo_image.get_rect()
+        self.normal_ammo_rect.bottomright = self.screen_rect.bottomright

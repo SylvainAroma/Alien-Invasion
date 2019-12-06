@@ -1,56 +1,66 @@
+import pygame
+
 class Settings:
-	"""settings for the game"""
+    """settings for the game"""
 
-	def __init__(self):
+    def __init__(self):
 
-		#screen settings
-		self.screen_width = 1200
-		self.screen_height = 800
-		self.bg_color = (230, 230, 230)
+        #screen settings
+        self.screen_width = 1200
+        self.screen_height = 800
+        self.bg_color = (230, 230, 230)
+        self.bg = pygame.image.load("background.jpg")
 
-		#ship settings
-		self.ship_speed = 1.5
-		self.ship_limit = 3
+        #ship settings
+        self.ship_speed = 1.5
+        self.ship_limit = 3
 
-		#bullet settings
-		self.bullet_speed = 1.5
-		self.bullet_width = 3
-		self.bullet_height = 15
-		self.bullet_color = (60,60,60)
-		self.bullets_allowed = 3
+        #bullet settings
+        self.bullet_speed = 1.5
+        self.bullet_width = 3
+        self.bullet_height = 15
+        self.bullet_color = (60,60,60)
+        self.bullets_allowed = 3
 
-		#alien settings
-		self.alien_speed = 1.0
-		self.fleet_drop_speed = 10
-		#fleet direction of 1 represents right; while -1 represents left (over the x axis)
-		self.fleet_direction = 1
+        #special bullet settings
+        self.special_bullet_speed = 4.0
+        self.special_bullet_width = 350
+        self.special_bullet_height = 25
+        self.special_bullet_color = (60,60,60)
+        self.special_bullets_allowed = 3
 
-		#how quickly the game speeds up
-		self.speedup_scale = 1.1
+        #alien settings
+        self.alien_speed = 1.0
+        self.fleet_drop_speed = 10
+        #fleet direction of 1 represents right; while -1 represents left (over the x axis)
+        self.fleet_direction = 1
 
-		#how quickly the alien point value increases
-		self.score_scale = 1.5
+        #how quickly the game speeds up
+        self.speedup_scale = 1.1
 
-		self.initialize_dynamic_settings()
+        #how quickly the alien point value increases
+        self.score_scale = 1.5
 
-	def initialize_dynamic_settings(self):
-		"""initialize settings that change throughout the game"""
-		self.ship_speed = 1.5
-		self.bullet_speed = 3.0
-		self.alien_speed = 1.0
+        self.initialize_dynamic_settings()
 
-		#fleet_drection of 1 represents right while -1 represents left
-		self.fleet_direction = 1
+    def initialize_dynamic_settings(self):
+        """initialize settings that change throughout the game"""
+        self.ship_speed = 1.5
+        self.bullet_speed = 3.0
+        self.alien_speed = 1.0
 
-		#scoring
-		self.alien_points = 50
+        #fleet_drection of 1 represents right while -1 represents left
+        self.fleet_direction = 1
 
-	def increase_speed(self):
-		"""increase speed settings"""
-		self.ship_speed *= self.speedup_scale
-		self.bullet_speed *= self.speedup_scale
-		self.alien_speed *= self.speedup_scale
-		self.alien_points = int(self.alien_points * self.score_scale)
+        #scoring
+        self.alien_points = 50
+
+    def increase_speed(self):
+        """increase speed settings"""
+        self.ship_speed *= self.speedup_scale
+        self.bullet_speed *= self.speedup_scale
+        self.alien_speed *= self.speedup_scale
+        self.alien_points = int(self.alien_points * self.score_scale)
 
 
 
